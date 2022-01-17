@@ -3,7 +3,19 @@ from datetime import datetime
 
 
 class Transaction(BaseModel):
-    stock_id: int
+    stockId: int
     amount: float
     value: float
-    purchased: datetime
+
+
+class TransactionShow(Transaction):
+
+    class Config:
+        orm_mode = True
+
+
+class User(BaseModel):
+    userName: str
+    email: str
+    password: str
+
