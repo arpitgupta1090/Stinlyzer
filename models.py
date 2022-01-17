@@ -4,7 +4,6 @@ from sqlalchemy import Column, Integer, Float, DateTime, String, ForeignKey
 from sqlalchemy.orm import relationship
 
 
-
 class Transaction(Base):
     __tablename__ = 'transactions'
 
