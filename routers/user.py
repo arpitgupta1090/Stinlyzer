@@ -1,8 +1,7 @@
 from fastapi import APIRouter, Depends, status, HTTPException
-from DataBase import schemas, models
+from DataBase import schemas
 from sqlalchemy.orm import Session
 from DataBase.database import get_db
-from encryption import encrypt
 from custom_exceptions.exception import DuplicateUserException
 from sqlalchemy.exc import IntegrityError
 from repository import user
@@ -17,11 +16,6 @@ router = APIRouter(
 @router.post("/", status_code=status.HTTP_201_CREATED, response_model=schemas.ShowUser)
 def create(request: schemas.User, db: Session = Depends(get_db)):
     try:
-        # new_user = models.User(userName=request.userName, email=request.email, password=encrypt.hashed(request.password))
-        # db.add(new_user)
-        # db.commit()
-        # db.refresh(new_user)
-        # return new_user
         new_user = user.create(request, db)
         return new_user
     except IntegrityError:
