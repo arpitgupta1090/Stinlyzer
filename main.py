@@ -19,12 +19,7 @@ def get_db():
         db.close()
 
 
-@app.get("/")
-def home():
-    return "home"
-
-
-@app.post("/transactions", status_code=status.HTTP_201_CREATED)
+@app.post("/transactions", status_code=status.HTTP_201_CREATED, tags=["Transactions"])
 def create_transaction(request: schemas.Transaction, db: Session = Depends(get_db)):
     new_tnx = models.Transaction(stockId=request.stockId, amount=request.amount, value=request.value)
     db.add(new_tnx)
@@ -33,13 +28,13 @@ def create_transaction(request: schemas.Transaction, db: Session = Depends(get_d
     return new_tnx
 
 
-@app.get("/transactions")
+@app.get("/transactions", tags=["Transactions"])
 def list_transaction(db: Session = Depends(get_db)):
     transactions = db.query(models.Transaction).all()
     return transactions
 
 
-@app.get("/transactions/{id}")
+@app.get("/transactions/{id}", tags=["Transactions"])
 def details_transaction(id, db: Session = Depends(get_db)):
     transaction = db.query(models.Transaction).filter(models.Transaction.id==id).first()
     if not transaction:
@@ -47,7 +42,7 @@ def details_transaction(id, db: Session = Depends(get_db)):
     return transaction
 
 
-@app.delete("/transactions/{id}", status_code=status.HTTP_204_NO_CONTENT)
+@app.delete("/transactions/{id}", status_code=status.HTTP_204_NO_CONTENT, tags=["Transactions"])
 def destroy(id, db: Session = Depends(get_db)):
     transaction = db.query(models.Transaction).filter(models.Transaction.id==id)
     if not transaction.first():
@@ -57,7 +52,7 @@ def destroy(id, db: Session = Depends(get_db)):
     return {"msg": "Deleted"}
 
 
-@app.put("/transactions/{id}", status_code=status.HTTP_202_ACCEPTED)
+@app.put("/transactions/{id}", status_code=status.HTTP_202_ACCEPTED, tags=["Transactions"])
 def update(id, request: schemas.Transaction, db: Session = Depends(get_db)):
     transaction = db.query(models.Transaction).filter(models.Transaction.id == id)
     if not transaction.first():
@@ -67,7 +62,7 @@ def update(id, request: schemas.Transaction, db: Session = Depends(get_db)):
     return transaction.first()
 
 
-@app.post("/user", status_code=status.HTTP_201_CREATED, response_model=schemas.ShowUser)
+@app.post("/user", status_code=status.HTTP_201_CREATED, response_model=schemas.ShowUser, tags=["Users"])
 def create(request: schemas.User, db: Session = Depends(get_db)):
 
     new_user = models.User(userName=request.userName, email=request.email, password=encrypt.hashed(request.password))
@@ -77,7 +72,7 @@ def create(request: schemas.User, db: Session = Depends(get_db)):
     return new_user
 
 
-@app.get("/user/{username}", response_model=schemas.ShowUser)
+@app.get("/user/{username}", response_model=schemas.ShowUser, tags=["Users"])
 def detail(username: str, db: Session = Depends(get_db)):
     user = db.query(models.User).filter(models.User.userName == username).first()
     if not user:
