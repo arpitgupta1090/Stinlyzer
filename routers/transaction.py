@@ -5,10 +5,13 @@ from DataBase.database import get_db
 from typing import List
 
 
-router = APIRouter()
+router = APIRouter(
+    tags=["Transactions"],
+    prefix="/transactions"
+)
 
 
-@router.get("/transactions/{id}", tags=["Transactions"], response_model=schemas.TransactionShow)
+@router.get("/{id}", response_model=schemas.TransactionShow)
 def details_transaction(id, db: Session = Depends(get_db)):
     transaction = db.query(models.Transaction).filter(models.Transaction.id==id).first()
     if not transaction:
@@ -16,7 +19,7 @@ def details_transaction(id, db: Session = Depends(get_db)):
     return transaction
 
 
-@router.post("/transactions", status_code=status.HTTP_201_CREATED, tags=["Transactions"])
+@router.post("/", status_code=status.HTTP_201_CREATED)
 def create_transaction(request: schemas.Transaction, db: Session = Depends(get_db)):
     new_tnx = models.Transaction(stockId=request.stockId, amount=request.amount, value=request.value, user_id=request.user_id)
     db.add(new_tnx)
@@ -25,13 +28,13 @@ def create_transaction(request: schemas.Transaction, db: Session = Depends(get_d
     return new_tnx
 
 
-@router.get("/transactions", tags=["Transactions"], response_model=List[schemas.TransactionShow])
+@router.get("/", response_model=List[schemas.TransactionShow])
 def list_transaction(db: Session = Depends(get_db)):
     transactions = db.query(models.Transaction).all()
     return transactions
 
 
-@router.get("/transactions/{id}", tags=["Transactions"], response_model=schemas.TransactionShow)
+@router.get("/{id}", response_model=schemas.TransactionShow)
 def details_transaction(id, db: Session = Depends(get_db)):
     transaction = db.query(models.Transaction).filter(models.Transaction.id==id).first()
     if not transaction:
@@ -39,7 +42,7 @@ def details_transaction(id, db: Session = Depends(get_db)):
     return transaction
 
 
-@router.delete("/transactions/{id}", status_code=status.HTTP_204_NO_CONTENT, tags=["Transactions"])
+@router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
 def destroy(id, db: Session = Depends(get_db)):
     transaction = db.query(models.Transaction).filter(models.Transaction.id==id)
     if not transaction.first():
@@ -49,7 +52,7 @@ def destroy(id, db: Session = Depends(get_db)):
     return {"msg": "Deleted"}
 
 
-@router.put("/transactions/{id}", status_code=status.HTTP_202_ACCEPTED, tags=["Transactions"])
+@router.put("/{id}", status_code=status.HTTP_202_ACCEPTED)
 def update(id, request: schemas.Transaction, db: Session = Depends(get_db)):
     transaction = db.query(models.Transaction).filter(models.Transaction.id == id)
     if not transaction.first():

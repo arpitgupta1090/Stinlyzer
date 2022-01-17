@@ -7,10 +7,13 @@ from custom_exceptions.exception import DuplicateUserException
 from sqlalchemy.exc import IntegrityError
 
 
-router = APIRouter()
+router = APIRouter(
+    tags=["Users"],
+    prefix="/user"
+)
 
 
-@router.post("/user", status_code=status.HTTP_201_CREATED, response_model=schemas.ShowUser, tags=["Users"])
+@router.post("/", status_code=status.HTTP_201_CREATED, response_model=schemas.ShowUser)
 def create(request: schemas.User, db: Session = Depends(get_db)):
     try:
         new_user = models.User(userName=request.userName, email=request.email, password=encrypt.hashed(request.password))
@@ -22,7 +25,7 @@ def create(request: schemas.User, db: Session = Depends(get_db)):
         raise DuplicateUserException(request.userName)
 
 
-@router.get("/user/{username}", response_model=schemas.ShowUser, tags=["Users"])
+@router.get("/{username}", response_model=schemas.ShowUser)
 def detail(username: str, db: Session = Depends(get_db)):
     user = db.query(models.User).filter(models.User.userName == username).first()
     if not user:
