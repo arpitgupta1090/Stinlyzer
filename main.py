@@ -1,7 +1,11 @@
 from fastapi import FastAPI, Depends, status, HTTPException
-import schemas, models
+import schemas
+import models
 from database import engine, SessionLocal
 from sqlalchemy.orm import Session
+from sqlalchemy.exc import IntegrityError
+import encrypt
+# import custom_exceptions
 
 app = FastAPI()
 models.Base.metadata.create_all(engine)
@@ -63,10 +67,21 @@ def update(id, request: schemas.Transaction, db: Session = Depends(get_db)):
     return transaction.first()
 
 
-@app.post("/user", status_code=status.HTTP_201_CREATED)
+@app.post("/user", status_code=status.HTTP_201_CREATED, response_model=schemas.ShowUser)
 def create(request: schemas.User, db: Session = Depends(get_db)):
-    new_user = models.User(userName=request.userName, email=request.email, password=request.password)
+
+    new_user = models.User(userName=request.userName, email=request.email, password=encrypt.hashed(request.password))
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
     return new_user
+
+
+@app.get("/user/{username}", response_model=schemas.ShowUser)
+def detail(username: str, db: Session = Depends(get_db)):
+    user = db.query(models.User).filter(models.User.userName == username).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="Not Found")
+    return user
+
+
