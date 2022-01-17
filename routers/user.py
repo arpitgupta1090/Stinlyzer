@@ -5,6 +5,7 @@ from DataBase.database import get_db
 from encryption import encrypt
 from custom_exceptions.exception import DuplicateUserException
 from sqlalchemy.exc import IntegrityError
+from repository import user
 
 
 router = APIRouter(
@@ -16,10 +17,12 @@ router = APIRouter(
 @router.post("/", status_code=status.HTTP_201_CREATED, response_model=schemas.ShowUser)
 def create(request: schemas.User, db: Session = Depends(get_db)):
     try:
-        new_user = models.User(userName=request.userName, email=request.email, password=encrypt.hashed(request.password))
-        db.add(new_user)
-        db.commit()
-        db.refresh(new_user)
+        # new_user = models.User(userName=request.userName, email=request.email, password=encrypt.hashed(request.password))
+        # db.add(new_user)
+        # db.commit()
+        # db.refresh(new_user)
+        # return new_user
+        new_user = user.create(request, db)
         return new_user
     except IntegrityError:
         raise DuplicateUserException(request.userName)
@@ -27,7 +30,7 @@ def create(request: schemas.User, db: Session = Depends(get_db)):
 
 @router.get("/{username}", response_model=schemas.ShowUser)
 def detail(username: str, db: Session = Depends(get_db)):
-    user = db.query(models.User).filter(models.User.userName == username).first()
-    if not user:
+    users = user.get(username, db)
+    if not users:
         raise HTTPException(status_code=404, detail="Not Found")
-    return user
+    return users
