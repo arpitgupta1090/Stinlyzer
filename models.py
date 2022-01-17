@@ -1,6 +1,8 @@
 from sqlalchemy.sql import func
 from database import Base
-from sqlalchemy import Column, Integer, Float, DateTime, String
+from sqlalchemy import Column, Integer, Float, DateTime, String, ForeignKey
+from sqlalchemy.orm import relationship
+
 
 
 class Transaction(Base):
@@ -11,6 +13,9 @@ class Transaction(Base):
     amount = Column(Float)
     value = Column(Float)
     purchased = Column(DateTime, default=func.now())
+    user_id = Column(Integer, ForeignKey("users.id"))
+
+    user = relationship("User", back_populates="transactions")
 
 
 class User(Base):
@@ -20,3 +25,4 @@ class User(Base):
     userName = Column(String, unique=True)
     email = Column(String)
     password = Column(String)
+    transactions = relationship("Transaction", back_populates="user")

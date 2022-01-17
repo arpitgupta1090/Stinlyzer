@@ -3,6 +3,7 @@ import schemas
 import models
 from database import engine, SessionLocal
 from sqlalchemy.orm import Session
+from typing import List
 from sqlalchemy.exc import IntegrityError
 import encrypt
 # import custom_exceptions
@@ -21,20 +22,20 @@ def get_db():
 
 @app.post("/transactions", status_code=status.HTTP_201_CREATED, tags=["Transactions"])
 def create_transaction(request: schemas.Transaction, db: Session = Depends(get_db)):
-    new_tnx = models.Transaction(stockId=request.stockId, amount=request.amount, value=request.value)
+    new_tnx = models.Transaction(stockId=request.stockId, amount=request.amount, value=request.value, user_id=request.user_id)
     db.add(new_tnx)
     db.commit()
     db.refresh(new_tnx)
     return new_tnx
 
 
-@app.get("/transactions", tags=["Transactions"])
+@app.get("/transactions", tags=["Transactions"], response_model=List[schemas.TransactionShow])
 def list_transaction(db: Session = Depends(get_db)):
     transactions = db.query(models.Transaction).all()
     return transactions
 
 
-@app.get("/transactions/{id}", tags=["Transactions"])
+@app.get("/transactions/{id}", tags=["Transactions"], response_model=schemas.TransactionShow)
 def details_transaction(id, db: Session = Depends(get_db)):
     transaction = db.query(models.Transaction).filter(models.Transaction.id==id).first()
     if not transaction:

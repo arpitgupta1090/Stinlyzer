@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import List
 from datetime import datetime
 
 
@@ -6,12 +7,7 @@ class Transaction(BaseModel):
     stockId: int
     amount: float
     value: float
-
-
-class TransactionShow(Transaction):
-
-    class Config:
-        orm_mode = True
+    user_id: int
 
 
 class User(BaseModel):
@@ -20,9 +16,29 @@ class User(BaseModel):
     password: str
 
 
+class UserTransaction(BaseModel):
+    userName: str
+    email: str
+
+    class Config:
+        orm_mode = True
+
+
 class ShowUser(BaseModel):
     userName: str
     email: str
+    transactions: List
+
+    class Config:
+        orm_mode = True
+
+
+class TransactionShow(BaseModel):
+    stockId: int
+    amount: float
+    value: float
+    user_id: int
+    user: UserTransaction
 
     class Config:
         orm_mode = True
