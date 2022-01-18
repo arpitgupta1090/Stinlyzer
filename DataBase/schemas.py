@@ -41,3 +41,15 @@ class TransactionShow(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class Stock(BaseModel):
+    name: str
+    symbol: str
+    exchange: str
+    price: float
+
+
+class ShowStock(Stock):
+    class Config:
+        orm_mode = True

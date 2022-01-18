@@ -25,3 +25,14 @@ class User(Base):
     email = Column(String)
     password = Column(String)
     transactions = relationship("Transaction", back_populates="user")
+
+
+class Stock(Base):
+    __tablename__ = "stocks"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String)
+    symbol = Column(String, unique=True)
+    exchange = Column(String)
+    price = Column(float, default=0)
+
