@@ -3,7 +3,11 @@ from DataBase import models
 from DataBase.database import engine
 from routers import transaction, user, stock
 from fastapi.openapi.utils import get_openapi
-from custom_exceptions.exception import DuplicateUserException, duplicate_user_exception
+from custom_exceptions.exception import (DuplicateUserException,
+                                         duplicate_user_exception,
+                                         SymbolNotFoundException,
+                                         symbol_not_found)
+
 
 app = FastAPI(docs_url="/", redoc_url="/docs")
 
@@ -14,6 +18,7 @@ app.include_router(stock.router)
 app.include_router(transaction.router)
 
 app.add_exception_handler(DuplicateUserException, duplicate_user_exception)
+app.add_exception_handler(SymbolNotFoundException, symbol_not_found)
 
 
 def custom_openapi():

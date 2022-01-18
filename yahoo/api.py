@@ -1,5 +1,5 @@
 import requests
-from apikey import API_KEY
+from yahoo.apikey import API_KEY
 
 BASE_URL = "https://yfapi.net/v6/finance/"
 
@@ -33,7 +33,8 @@ def get_symbol(name):
     results = response.json().get("ResultSet").get("Result")
     if results:
         for data in results:
-            symbols.append((data.get('name'), data.get('symbol'), data.get('exch')))
+            if data.get("exch") in ("NSI", "BSE"):
+                symbols.append({"company name": data.get('name'), "symbol": data.get('symbol'), "exchange": data.get('exch')})
     return symbols
 
 

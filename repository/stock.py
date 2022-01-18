@@ -10,5 +10,5 @@ def create(request, db):
 
 
 def get(symbol, db):
-    stock = db.query(models.Stock).filter(models.Stock.symbol == symbol).first()
+    stock = db.query(models.Stock).filter(models.Stock.symbol == symbol)
     return stock
