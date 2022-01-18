@@ -8,13 +8,14 @@ class Transaction(Base):
     __tablename__ = 'transactions'
 
     id = Column(Integer, primary_key=True, index=True)
-    stockId = Column(Integer)
+    stockId = Column(Integer, ForeignKey("stocks.id"))
     amount = Column(Float)
     value = Column(Float)
     purchased = Column(DateTime, default=func.now())
     user_id = Column(Integer, ForeignKey("users.id"))
 
     user = relationship("User", back_populates="transactions")
+    stock = relationship("Stock", back_populates="transactions")
 
 
 class User(Base):
@@ -35,4 +36,6 @@ class Stock(Base):
     symbol = Column(String, unique=True)
     exchange = Column(String)
     price = Column(Float, default=0)
+
+    transactions = relationship("Transaction", back_populates="stock")
 

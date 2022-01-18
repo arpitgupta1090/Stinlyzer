@@ -32,17 +32,6 @@ class ShowUser(BaseModel):
         orm_mode = True
 
 
-class TransactionShow(BaseModel):
-    stockId: int
-    amount: float
-    value: float
-    user_id: int
-    user: UserTransaction
-
-    class Config:
-        orm_mode = True
-
-
 class Stock(BaseModel):
     name: str
     symbol: str
@@ -51,5 +40,25 @@ class Stock(BaseModel):
 
 
 class ShowStock(Stock):
+    transactions: List
+
+    class Config:
+        orm_mode = True
+
+
+class ShowStockTransaction(Stock):
+
+    class Config:
+        orm_mode = True
+
+
+class TransactionShow(BaseModel):
+    stockId: int
+    amount: float
+    value: float
+    user_id: int
+    user: UserTransaction
+    stock: ShowStockTransaction
+
     class Config:
         orm_mode = True

@@ -14,11 +14,6 @@ router = APIRouter(
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
 def create_transaction(request: schemas.Transaction, db: Session = Depends(get_db)):
-    # new_tnx = models.Transaction(stockId=request.stockId, amount=request.amount, value=request.value, user_id=request.user_id)
-    # db.add(new_tnx)
-    # db.commit()
-    # db.refresh(new_tnx)
-    # return new_tnx
     new_tnx = transaction.create(request, db)
     return new_tnx
 
