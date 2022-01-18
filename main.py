@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from DataBase import models
 from DataBase.database import engine
-from routers import transaction, user
+from routers import transaction, user, stock
 from fastapi.openapi.utils import get_openapi
 from custom_exceptions.exception import DuplicateUserException, duplicate_user_exception
 
@@ -11,6 +11,7 @@ models.Base.metadata.create_all(engine)
 
 app.include_router(transaction.router)
 app.include_router(user.router)
+app.include_router(stock.router)
 
 app.add_exception_handler(DuplicateUserException, duplicate_user_exception)
 

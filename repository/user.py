@@ -1,7 +1,4 @@
-from fastapi import Depends
-from DataBase import schemas, models
-from sqlalchemy.orm import Session
-from DataBase.database import get_db
+from DataBase import models
 from encryption import encrypt
 
 

@@ -34,5 +34,5 @@ class Stock(Base):
     name = Column(String)
     symbol = Column(String, unique=True)
     exchange = Column(String)
-    price = Column(float, default=0)
+    price = Column(Float, default=0)
 
