@@ -4,8 +4,9 @@ from typing import List
 
 class Transaction(BaseModel):
     stockId: int
-    amount: float
-    value: float
+    price: float
+    quantity: int
+    purchased_date: str
     user_id: int
 
 
@@ -53,12 +54,13 @@ class ShowStockTransaction(Stock):
 
 
 class TransactionShow(BaseModel):
-    stockId: int
-    amount: float
-    value: float
     user_id: int
     user: UserTransaction
+    stockId: int
     stock: ShowStockTransaction
+    price: float
+    quantity: int
+    purchased_date: str
 
     class Config:
         orm_mode = True

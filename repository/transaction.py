@@ -12,7 +12,8 @@ def list(db):
 
 
 def create(request, db):
-    new_tnx = models.Transaction(stockId=request.stockId, amount=request.amount, value=request.value, user_id=request.user_id)
+    new_tnx = models.Transaction(stockId=request.stockId, price=request.price, quantity=request.quantity,
+                                 purchased_date=request.purchased_date, user_id=request.user_id)
     db.add(new_tnx)
     db.commit()
     db.refresh(new_tnx)

@@ -1,8 +1,7 @@
 from fastapi import APIRouter, Depends, status, HTTPException
-from DataBase import schemas, models
+from DataBase import schemas
 from sqlalchemy.orm import Session
 from DataBase.database import get_db
-from typing import List
 from repository import transaction
 
 
@@ -18,7 +17,7 @@ def create_transaction(request: schemas.Transaction, db: Session = Depends(get_d
     return new_tnx
 
 
-@router.get("/", response_model=List[schemas.TransactionShow])
+@router.get("/")
 def list_transaction(db: Session = Depends(get_db)):
     transactions = transaction.list(db)
     return transactions

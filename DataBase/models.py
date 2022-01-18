@@ -9,9 +9,9 @@ class Transaction(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     stockId = Column(Integer, ForeignKey("stocks.id"))
-    amount = Column(Float)
-    value = Column(Float)
-    purchased = Column(DateTime, default=func.now())
+    price = Column(Float)
+    quantity = Column(Integer)
+    purchased_date = Column(String, default='YYYYMMDD')
     user_id = Column(Integer, ForeignKey("users.id"))
 
     user = relationship("User", back_populates="transactions")
