@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, status, HTTPException
 from DataBase import schemas
 from sqlalchemy.orm import Session
 from DataBase.database import get_db
-from custom_exceptions.exception import DuplicateUserException
+from custom_exceptions import DuplicateUserException
 from sqlalchemy.exc import IntegrityError
 from crud import user
 

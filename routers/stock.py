@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, status, HTTPException
 from DataBase import schemas
 from sqlalchemy.orm import Session
 from DataBase.database import get_db
-from custom_exceptions.exception import DuplicateUserException, SymbolNotFoundException
+from custom_exceptions import DuplicateUserException, SymbolNotFoundException
 from sqlalchemy.exc import IntegrityError
 from crud import stock
 from yahoo.api import get_symbol, get_quote

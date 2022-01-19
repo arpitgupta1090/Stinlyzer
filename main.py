@@ -3,11 +3,10 @@ from DataBase import models
 from DataBase.database import engine
 from routers import transaction, user, stock
 from fastapi.openapi.utils import get_openapi
-from custom_exceptions.exception import (DuplicateUserException,
-                                         duplicate_user_exception,
-                                         SymbolNotFoundException,
-                                         symbol_not_found)
-
+from custom_exceptions import (DuplicateUserException,
+                               duplicate_user_exception,
+                               SymbolNotFoundException,
+                               symbol_not_found)
 
 app = FastAPI(docs_url="/", redoc_url="/docs")
 
