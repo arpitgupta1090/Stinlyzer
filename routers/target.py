@@ -34,13 +34,16 @@ def update_sector(sector, request: schemas.Sector, db: Session = Depends(get_db)
     sectors = target.details_sector(sector, db)
     if not sectors.first():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not found")
+    total = target.get_total_sector_target(db)
+    if total + request.target - sectors.first().target > 100:
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail="Total target cannot be more than 100")
     sectors.update(request.__dict__, synchronize_session=False)
     db.commit()
     return sectors.first()
 
 
 @router.delete("/sectors/{sector}", status_code=status.HTTP_202_ACCEPTED)
-def update_sector(sector, db: Session = Depends(get_db)):
+def delete_sector(sector, db: Session = Depends(get_db)):
     sectors = target.details_sector(sector, db)
     if not sectors.first():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not found")
@@ -61,6 +64,8 @@ def create_segment(request: schemas.Segment, db: Session = Depends(get_db)):
 @router.get("/segments", response_model=List[schemas.ShowSegment])
 def list_segments(db: Session = Depends(get_db)):
     segments = target.list_segment(db)
+    print(target.get_total_segment_target(db))
+    print(target.get_total_sector_target(db))
     return segments
 
 
@@ -69,13 +74,16 @@ def update_segment(segment, request: schemas.Segment, db: Session = Depends(get_
     segments = target.details_segment(segment, db)
     if not segments.first():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not found")
+    total = target.get_total_segment_target(db)
+    if total + request.target - segments.first().target > 100:
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail="Total target cannot be more than 100")
     segments.update(request.__dict__, synchronize_session=False)
     db.commit()
     return segments.first()
 
 
 @router.delete("/segments/{segment}", status_code=status.HTTP_202_ACCEPTED)
-def update_segment(segment, db: Session = Depends(get_db)):
+def delete_segment(segment, db: Session = Depends(get_db)):
     segments = target.details_segment(segment, db)
     if not segments.first():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not found")

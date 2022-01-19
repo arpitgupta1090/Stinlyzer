@@ -5,6 +5,7 @@ class Sector(str, Enum):
     IT = "IT"
     TECH = "TECH"
     FINANCE = "FINANCE"
+    RETAIL = "RETAIL"
     CRYPTO = "CRYPTO"
 
 
