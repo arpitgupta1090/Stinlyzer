@@ -1,6 +1,5 @@
-from sqlalchemy.sql import func
 from DataBase.database import Base
-from sqlalchemy import Column, Integer, Float, DateTime, String, ForeignKey
+from sqlalchemy import Column, Integer, Float, String, ForeignKey
 from sqlalchemy.orm import relationship
 
 
@@ -26,6 +25,8 @@ class User(Base):
     email = Column(String)
     password = Column(String)
     transactions = relationship("Transaction", back_populates="user")
+    sectors = relationship("Sector", back_populates="user")
+    segments = relationship("Segment", back_populates="user")
 
 
 class Stock(Base):
@@ -50,7 +51,9 @@ class Sector(Base):
 
     sector = Column(String, primary_key=True, index=True)
     target = Column(Float, default=0)
+    user_id = Column(Integer, ForeignKey("users.id"))
 
+    user = relationship("User", back_populates="sectors")
     stocks = relationship("Stock", back_populates="sectors")
 
 
@@ -59,7 +62,9 @@ class Segment(Base):
 
     segment = Column(String, primary_key=True, index=True)
     target = Column(Float, default=0)
+    user_id = Column(Integer, ForeignKey("users.id"))
 
+    user = relationship("User", back_populates="segments")
     stocks = relationship("Stock", back_populates="segments")
 
 

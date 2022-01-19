@@ -82,6 +82,7 @@ class TransactionShow(BaseModel):
 class Sector(BaseModel):
     sector: enums.Sector
     target: float
+    user_id: int
 
 
 class ShowSector(Sector):
@@ -92,6 +93,7 @@ class ShowSector(Sector):
 class Segment(BaseModel):
     segment: enums.Segment
     target: float
+    user_id: int
 
 
 class ShowSegment(Segment):

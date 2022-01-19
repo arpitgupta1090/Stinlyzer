@@ -34,7 +34,7 @@ def create(request: schemas.Stock, db: Session = Depends(get_db)):
 @router.get("/{symbol}", response_model=schemas.ShowStock)
 def detail(symbol: str, db: Session = Depends(get_db)):
     stocks = stock.get(symbol, db)
-    if not stocks:
+    if not stocks.first():
         raise HTTPException(status_code=404, detail="Not Found")
     return stocks.first()
 

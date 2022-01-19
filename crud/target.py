@@ -1,11 +1,10 @@
 from DataBase import models
 from sqlalchemy.sql import func
-from fastapi import HTTPException, status
 from custom_exceptions import TargetLimitExceeded
 
 
 def create_sector(request, db):
-    new_sector = models.Sector(sector=request.sector, target=request.target)
+    new_sector = models.Sector(sector=request.sector, target=request.target, user_id=request.user_id)
     total = get_total_sector_target(db)
     if total + request.target > 100:
         raise TargetLimitExceeded()
@@ -26,7 +25,7 @@ def details_sector(sector, db):
 
 
 def create_segment(request, db):
-    new_segment = models.Segment(segment=request.segment, target=request.target)
+    new_segment = models.Segment(segment=request.segment, target=request.target, user_id=request.user_id)
     total = get_total_segment_target(db)
     if total + request.target > 100:
         raise TargetLimitExceeded()
@@ -48,11 +47,13 @@ def details_segment(segment, db):
 
 def get_total_segment_target(db):
     totals = db.query(func.sum(models.Segment.target).label("total_target"))
-    if totals:
-        return totals[0][0]
+    if not totals[0][0]:
+        return 0
+    return totals[0][0]
 
 
 def get_total_sector_target(db):
     totals = db.query(func.sum(models.Sector.target).label("total_target"))
-    if totals:
-        return totals[0][0]
+    if not totals[0][0]:
+        return 0
+    return totals[0][0]
