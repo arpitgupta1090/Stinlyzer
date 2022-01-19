@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from typing import List
-from enums import Sector, Segment
+import enums
 
 
 class Transaction(BaseModel):
@@ -39,14 +39,14 @@ class Stock(BaseModel):
     symbol: str
     exchange: str
     price: float
-    sector: Sector
-    segment: Segment
+    sector: enums.Sector
+    segment: enums.Segment
     tags: str
 
 
 class StockUpdate(BaseModel):
-    sector: Sector
-    segment: Segment
+    sector: enums.Sector
+    segment: enums.Segment
     tags: str
 
     class Config:
@@ -75,5 +75,25 @@ class TransactionShow(BaseModel):
     quantity: int
     purchased_date: str
 
+    class Config:
+        orm_mode = True
+
+
+class Sector(BaseModel):
+    sector: enums.Sector
+    target: float
+
+
+class ShowSector(Sector):
+    class Config:
+        orm_mode = True
+
+
+class Segment(BaseModel):
+    segment: enums.Segment
+    target: float
+
+
+class ShowSegment(Segment):
     class Config:
         orm_mode = True

@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from DataBase import models
 from DataBase.database import engine
-from routers import transaction, user, stock
+from routers import transaction, user, stock, target
 from fastapi.openapi.utils import get_openapi
 from custom_exceptions import (DuplicateUserException,
                                duplicate_user_exception,
@@ -15,6 +15,7 @@ models.Base.metadata.create_all(engine)
 app.include_router(user.router)
 app.include_router(stock.router)
 app.include_router(transaction.router)
+app.include_router(target.router)
 
 app.add_exception_handler(DuplicateUserException, duplicate_user_exception)
 app.add_exception_handler(SymbolNotFoundException, symbol_not_found)

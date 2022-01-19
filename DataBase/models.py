@@ -36,9 +36,30 @@ class Stock(Base):
     symbol = Column(String, unique=True)
     exchange = Column(String)
     price = Column(Float, default=0)
-    sector = Column(String, nullable=True)
-    segment = Column(String, nullable=True)
+    sector = Column(String, ForeignKey("sectors.sector"))
+    segment = Column(String, ForeignKey("segments.segment"))
     tags = Column(String, nullable=True)
 
     transactions = relationship("Transaction", back_populates="stock")
+    sectors = relationship("Sector", back_populates="stocks")
+    segments = relationship("Segment", back_populates="stocks")
+
+
+class Sector(Base):
+    __tablename__ = "sectors"
+
+    sector = Column(String, primary_key=True, index=True)
+    target = Column(Float, default=0)
+
+    stocks = relationship("Stock", back_populates="sectors")
+
+
+class Segment(Base):
+    __tablename__ = "segments"
+
+    segment = Column(String, primary_key=True, index=True)
+    target = Column(Float, default=0)
+
+    stocks = relationship("Stock", back_populates="segments")
+
 
