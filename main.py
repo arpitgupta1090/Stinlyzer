@@ -6,7 +6,13 @@ from fastapi.openapi.utils import get_openapi
 from custom_exceptions import (DuplicateUserException,
                                duplicate_user_exception,
                                SymbolNotFoundException,
-                               symbol_not_found)
+                               symbol_not_found,
+                               DuplicateSectorException,
+                               duplicate_sector_exception,
+                               DuplicateSegmentException,
+                               duplicate_segment_exception,
+                               TargetLimitExceeded,
+                               target_limit_exceeded)
 
 app = FastAPI(docs_url="/", redoc_url="/docs")
 
@@ -19,6 +25,9 @@ app.include_router(target.router)
 
 app.add_exception_handler(DuplicateUserException, duplicate_user_exception)
 app.add_exception_handler(SymbolNotFoundException, symbol_not_found)
+app.add_exception_handler(DuplicateSectorException, duplicate_sector_exception)
+app.add_exception_handler(DuplicateSegmentException, duplicate_segment_exception)
+app.add_exception_handler(TargetLimitExceeded, target_limit_exceeded)
 
 
 def custom_openapi():

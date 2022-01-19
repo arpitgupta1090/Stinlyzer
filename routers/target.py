@@ -3,7 +3,7 @@ from typing import List
 from DataBase import schemas
 from sqlalchemy.orm import Session
 from DataBase.database import get_db
-from custom_exceptions import DuplicateUserException
+from custom_exceptions import DuplicateSegmentException, DuplicateSectorException, TargetLimitExceeded
 from sqlalchemy.exc import IntegrityError
 from crud import target
 
@@ -20,7 +20,7 @@ def create_sector(request: schemas.Sector, db: Session = Depends(get_db)):
         new_user = target.create_sector(request, db)
         return new_user
     except IntegrityError:
-        raise DuplicateUserException(request.sector)
+        raise DuplicateSectorException(request.sector)
 
 
 @router.get("/sectors", response_model=List[schemas.ShowSector])
@@ -36,7 +36,7 @@ def update_sector(sector, request: schemas.Sector, db: Session = Depends(get_db)
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not found")
     total = target.get_total_sector_target(db)
     if total + request.target - sectors.first().target > 100:
-        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail="Total target cannot be more than 100")
+        raise TargetLimitExceeded()
     sectors.update(request.__dict__, synchronize_session=False)
     db.commit()
     return sectors.first()
@@ -58,14 +58,12 @@ def create_segment(request: schemas.Segment, db: Session = Depends(get_db)):
         new_segment = target.create_segment(request, db)
         return new_segment
     except IntegrityError:
-        raise DuplicateUserException(request.segment)
+        raise DuplicateSegmentException(request.segment)
 
 
 @router.get("/segments", response_model=List[schemas.ShowSegment])
 def list_segments(db: Session = Depends(get_db)):
     segments = target.list_segment(db)
-    print(target.get_total_segment_target(db))
-    print(target.get_total_sector_target(db))
     return segments
 
 
@@ -76,7 +74,7 @@ def update_segment(segment, request: schemas.Segment, db: Session = Depends(get_
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not found")
     total = target.get_total_segment_target(db)
     if total + request.target - segments.first().target > 100:
-        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail="Total target cannot be more than 100")
+        raise TargetLimitExceeded()
     segments.update(request.__dict__, synchronize_session=False)
     db.commit()
     return segments.first()
