@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from DataBase.database import get_db
 from custom_exceptions.exception import DuplicateUserException
 from sqlalchemy.exc import IntegrityError
-from repository import user
+from crud import user
 
 
 router = APIRouter(

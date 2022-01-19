@@ -2,7 +2,8 @@ from DataBase import models
 
 
 def create(request, db):
-    new_stock = models.Stock(name=request.name, symbol=request.symbol, exchange=request.exchange, price=request.price)
+    new_stock = models.Stock(name=request.name, symbol=request.symbol, exchange=request.exchange, price=request.price,
+                             sector=request.sector, segment=request.segment, tags=request.tags)
     db.add(new_stock)
     db.commit()
     db.refresh(new_stock)

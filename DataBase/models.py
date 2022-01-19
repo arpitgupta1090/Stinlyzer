@@ -36,6 +36,9 @@ class Stock(Base):
     symbol = Column(String, unique=True)
     exchange = Column(String)
     price = Column(Float, default=0)
+    sector = Column(String, nullable=True)
+    segment = Column(String, nullable=True)
+    tags = Column(String, nullable=True)
 
     transactions = relationship("Transaction", back_populates="stock")
 

@@ -1,5 +1,20 @@
 from pydantic import BaseModel
-from typing import List
+from typing import List, Optional
+from enum import Enum
+
+
+class Sector(str, Enum):
+    IT = "IT"
+    TECH = "TECH"
+    FINANCE = "FINANCE"
+    CRYPTO = "CRYPTO"
+
+
+class Segment(str, Enum):
+    LARGE = "LARGE"
+    MID = "MID"
+    SMALL = "SMALL"
+    MICRO = "MICRO"
 
 
 class Transaction(BaseModel):
@@ -38,6 +53,18 @@ class Stock(BaseModel):
     symbol: str
     exchange: str
     price: float
+    sector: Sector
+    segment: Segment
+    tags: str
+
+
+class StockUpdate(BaseModel):
+    sector: Sector
+    segment: Segment
+    tags: str
+
+    class Config:
+        orm_mode = True
 
 
 class ShowStock(Stock):
