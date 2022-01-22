@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from DataBase import models
 from DataBase.database import engine
-from routers import transaction, user, stock, sector, segment
+from routers import transaction, user, stock, sector, segment, plot
 from fastapi.openapi.utils import get_openapi
 from custom_exceptions import (DuplicateUserException,
                                duplicate_user_exception,
@@ -23,6 +23,7 @@ app.include_router(stock.router)
 app.include_router(transaction.router)
 app.include_router(sector.router)
 app.include_router(segment.router)
+app.include_router(plot.router)
 
 app.add_exception_handler(DuplicateUserException, duplicate_user_exception)
 app.add_exception_handler(SymbolNotFoundException, symbol_not_found)

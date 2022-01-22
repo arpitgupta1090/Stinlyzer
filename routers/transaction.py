@@ -49,3 +49,7 @@ def update(id, request: schemas.Transaction, db: Session = Depends(get_db)):
     transactions.update(request.__dict__, synchronize_session=False)
     db.commit()
     return transactions.first()
+
+
+
+

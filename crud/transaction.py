@@ -1,4 +1,5 @@
 from DataBase import models
+from fastapi import HTTPException, status
 
 
 def detail(id, db):
@@ -18,3 +19,4 @@ def create(request, db):
     db.commit()
     db.refresh(new_tnx)
     return new_tnx
+
