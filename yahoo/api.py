@@ -1,7 +1,6 @@
 import requests
 # from yahoo.apikey import API_KEY
 import os
-
 API_KEY = os.environ.get("API_KEY")
 
 BASE_URL = "https://yfapi.net/v6/finance/"
@@ -25,6 +24,7 @@ def get_quote(symbol):
 
 
 def get_symbol(name):
+
     symbols = list()
     url = BASE_URL + "autocomplete"
     headers = {'X-API-KEY': API_KEY}
@@ -40,7 +40,3 @@ def get_symbol(name):
                 symbols.append({"company name": data.get('name'), "symbol": data.get('symbol'), "exchange": data.get('exch')})
     return symbols
 
-
-if __name__ == "__main__":
-    print(get_symbol("HFCL"))
-    print(get_quote("HFCL.NS"))

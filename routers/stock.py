@@ -15,11 +15,11 @@ router = APIRouter(
 
 
 @router.get("/symbol/{company}")
-def get_symbol(company: str):
-    symbols = get_symbol(company)
-    if not symbols:
+def symbol_from_company(company: str):
+    data = get_symbol(company)
+    if not data:
         raise HTTPException(status_code=404, detail="Not Found")
-    return symbols
+    return data
 
 
 @router.get("/")
