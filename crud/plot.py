@@ -24,25 +24,60 @@ def sector_count(total='count', data='sector'):
     return sectors
 
 
-def sector_wise_count():
-    total = total_transactions('count')
-    sectors = sector_count('count')
-    labels = [f"{i[0]} = {i[1]}" for i in sectors]
-    data = [round((i[1] / total) * 100, 2) for i in sectors]
-    return labels, data
-
-
-def sector_wise_amount():
-    total = total_transactions('sum')
-    sectors = sector_count('sum')
-    labels = [f"{i[0]} = {i[1]}" for i in sectors]
-    data = [round((i[1] / total) * 100, 2) for i in sectors]
-    return labels, data
-
-
 def sector_segment_wise_data(flag, data):
     total = total_transactions(flag)
     sectors = sector_count(flag, data)
     labels = [f"{i[0]} = {i[1]}" for i in sectors]
     data = [round((i[1] / total) * 100, 2) for i in sectors]
     return labels, data
+
+
+def sector_and_segment_wise_data(flag='count'):
+    if flag == 'count':
+        sql = text('select s.sector as sector, s.segment as segment, count(*) as amt from transactions t, '
+                   ' stocks s where t.stockId = s.id GROUP BY s.sector, s.segment')
+    else:
+        sql = text(
+            'select s.sector as sector, s.segment as segment, sum(t.price * t.quantity) as amt from transactions t, '
+            ' stocks s where t.stockId = s.id GROUP BY s.sector, s.segment')
+    result = engine.execute(sql)
+    output = [row for row in result]
+
+    labels = list()
+    for i in output:
+        if i[0] not in labels:
+            labels.append(i[0])
+    data = {i[1]: [0] * len(labels) for i in output}
+
+    for row in output:
+        data[row[1]][labels.index(row[0])] = row[2]
+
+    return labels, data
+
+
+def sector_and_segment_wise_stacked_data(flag='count'):
+    if flag == 'count':
+        sql = text('select s.sector as sector, s.segment as segment, count(*) as amt from transactions t, '
+                   ' stocks s where t.stockId = s.id GROUP BY s.sector, s.segment')
+    else:
+        sql = text(
+            'select s.sector as sector, s.segment as segment, sum(t.price * t.quantity) as amt from transactions t, '
+            ' stocks s where t.stockId = s.id GROUP BY s.sector, s.segment')
+    result = engine.execute(sql)
+    output = [row for row in result]
+
+    labels = list()
+    for i in output:
+        if i[0] not in labels:
+            labels.append(i[0])
+
+    legends = list()
+    for i in output:
+        if i[1] not in legends:
+            legends.append(i[1])
+
+    data = [[0 for i in range(len(labels))] for j in range(len(legends))]
+    for row in output:
+        data[labels.index(row[0])][legends.index(row[1])] = row[2]
+
+    return labels, legends, data
