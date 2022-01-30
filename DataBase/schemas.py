@@ -99,3 +99,9 @@ class Segment(BaseModel):
 class ShowSegment(Segment):
     class Config:
         orm_mode = True
+
+
+class Plot(BaseModel):
+    flag: enums.Flag
+    data: enums.Data
+

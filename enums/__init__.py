@@ -14,3 +14,15 @@ class Segment(str, Enum):
     MID = "MID"
     SMALL = "SMALL"
     MICRO = "MICRO"
+
+
+class Data(str, Enum):
+    SECTOR = "sector"
+    SEGMENT = "segment"
+
+
+class Flag(str, Enum):
+    SUM = "sum"
+    COUNT = "count"
+
+
