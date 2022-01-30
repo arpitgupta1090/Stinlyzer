@@ -39,13 +39,13 @@ class Stock(BaseModel):
     symbol: str
     exchange: str
     price: float
-    sector: enums.Sector
+    sector: str
     segment: enums.Segment
     tags: str
 
 
 class StockUpdate(BaseModel):
-    sector: enums.Sector
+    sector: str
     segment: enums.Segment
     tags: str
 
@@ -80,7 +80,7 @@ class TransactionShow(BaseModel):
 
 
 class Sector(BaseModel):
-    sector: enums.Sector
+    sector: str
     target: float
     user_id: int
 
