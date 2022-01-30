@@ -1,5 +1,8 @@
 import requests
-from yahoo.apikey import API_KEY
+# from yahoo.apikey import API_KEY
+import os
+
+API_KEY = os.environ.get("API_KEY")
 
 BASE_URL = "https://yfapi.net/v6/finance/"
 
