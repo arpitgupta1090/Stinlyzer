@@ -1,8 +1,8 @@
 from fastapi import APIRouter
-from fastapi.responses import RedirectResponse
 from starlette.responses import StreamingResponse
 import numpy as np
 import plots
+from crud import plot
 
 router = APIRouter(
     tags=["Plots"],
@@ -12,6 +12,7 @@ router = APIRouter(
 
 @router.get('/sin/{freq}')
 def graph_sine(freq: int):
+    plot.sector_wise()
     x_values = np.arange(-5, 5, 0.01)
     y_values = np.sin(x_values*freq)
     img = plots.build_graph(x_values, y_values)
@@ -22,6 +23,34 @@ def graph_sine(freq: int):
 def graph_pie_chart():
     labels = ['C', 'C++', 'Java', 'Python', 'PHP']
     data = [23,17,35,29,12]
+    img = plots.build_pie(data, labels)
+    return StreamingResponse(img, media_type="image/png")
+
+
+@router.get('/sector_count')
+def sector_wise_count():
+    labels, data = plot.sector_segment_wise_data('count', 'sector')
+    img = plots.build_pie(data, labels)
+    return StreamingResponse(img, media_type="image/png")
+
+
+@router.get('/sector_amount')
+def sector_wise_amount():
+    labels, data = plot.sector_segment_wise_data('sum', 'sector')
+    img = plots.build_pie(data, labels)
+    return StreamingResponse(img, media_type="image/png")
+
+
+@router.get('/segment_count')
+def segment_wise_count():
+    labels, data = plot.sector_segment_wise_data('count', 'segment')
+    img = plots.build_pie(data, labels)
+    return StreamingResponse(img, media_type="image/png")
+
+
+@router.get('/segment_amount')
+def segment_wise_amount():
+    labels, data = plot.sector_segment_wise_data('sum', 'segment')
     img = plots.build_pie(data, labels)
     return StreamingResponse(img, media_type="image/png")
 

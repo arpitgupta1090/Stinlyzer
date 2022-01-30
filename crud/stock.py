@@ -13,3 +13,8 @@ def create(request, db):
 def get(symbol, db):
     stock = db.query(models.Stock).filter(models.Stock.symbol == symbol)
     return stock
+
+
+def list_stocks(db):
+    stocks = db.query(models.Stock).all()
+    return stocks

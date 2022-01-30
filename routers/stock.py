@@ -10,16 +10,24 @@ from yahoo.api import get_symbol, get_quote
 
 router = APIRouter(
     tags=["Stocks"],
-    prefix="/stock"
+    prefix="/stocks"
 )
 
 
 @router.get("/symbol/{company}")
-def get(company: str):
+def get_symbol(company: str):
     symbols = get_symbol(company)
     if not symbols:
         raise HTTPException(status_code=404, detail="Not Found")
     return symbols
+
+
+@router.get("/")
+def list_stocks(db: Session = Depends(get_db)):
+    stocks = stock.list_stocks(db)
+    if not stocks:
+        raise HTTPException(status_code=404, detail="Not Found")
+    return stocks
 
 
 @router.post("/", status_code=status.HTTP_201_CREATED, response_model=schemas.ShowStock)
